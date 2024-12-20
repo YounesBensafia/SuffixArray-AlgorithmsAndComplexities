@@ -6,7 +6,7 @@ import tracemalloc
 
 def track_time(func, *args, **kwargs):
     total_time = 0
-    n = 10 # FOR THE AVERAGE (TO SAY REPEAT THIS 10 TIME AND GIVE THE AVERAGE)
+    n = 100 # FOR THE AVERAGE (TO SAY REPEAT THIS 10 TIME AND GIVE THE AVERAGE)
     for _ in range(n):
         start_time = time.time()
         func(*args, **kwargs)

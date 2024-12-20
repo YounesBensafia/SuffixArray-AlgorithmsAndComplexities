@@ -1,8 +1,10 @@
 import heapq
 import tracking_usage as tu
+import random
+import string
 
 def suffix_array_construction(text):
-    suffixes = [(text[i:], i) for i in range(len(text))]
+    suffixes = [text[i:] for i in range(len(text))]
     return suffixes
 
 def quicksort_suffixes(suffixes):
@@ -51,7 +53,7 @@ def bucketsort_suffixes(suffixes):
         buckets = [[] for _ in range(256)]
     return suffixes
 
-def main():
+def main_sorting():
     text = "Pneumonoultramicroscopicsilicovolcanoconiosis"
     suffixes = suffix_array_construction(text)
     print("\nBucket Sort:")
@@ -69,5 +71,37 @@ def main():
 # DANS PIRE DES CAS:
 # MERGE O(n*log(n))> HEAP O(n*log(n)) > BUCKET O(n2)> QUICK O(n2)
 
+
+# ================================================================
+
+def binary_search_suffix_array(suffixes, pattern):
+    left, right = 0, len(suffixes) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        suffix = suffixes[mid]
+        if suffix.startswith(pattern):
+            return 0
+        elif suffix < pattern:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
+
+def main_search():
+    time = 0
+    with open("./complexity.csv", "w") as a:
+        a.write("num,time\n")
+        for i in range(1,10000):
+            c = ''.join(random.choices(string.ascii_lowercase, k=random.randint(5, 20)))
+
+            patterns = [''.join(random.choices(string.ascii_lowercase, k=random.randint(1, 5))) for _ in range(10)]
+
+            pattern = random.choice(patterns)
+            suffixes = quicksort_suffixes(suffix_array_construction(c))
+            time_up = time
+            time = tu.track_time(lambda: binary_search_suffix_array(suffixes, pattern))
+            if time > time_up:
+                a.write(f"{i},{time:.6f}\n")
+
 if __name__ == "__main__":
-    main()
+    main_search()
